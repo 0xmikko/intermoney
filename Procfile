@@ -1,1 +1,1 @@
-web: cd server && gunicorn settings.wsgi
+web: sh ./heroku.sh
