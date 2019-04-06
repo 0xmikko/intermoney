@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'orders.apps.OrdersConfig',
     'tickers.apps.TickersConfig',
     'markets.apps.MarketsConfig',
