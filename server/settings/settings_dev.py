@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'orders.apps.OrdersConfig',
+    'tickers.apps.TickersConfig',
+    'market.apps.MarketConfig',
+    'celery'
 ]
 
 MIDDLEWARE = [
@@ -119,3 +122,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CELERY_URL = 'amqp://yfgdidtf:yfgdidtf@bear.rmq.cloudamqp.com:5672//'
+
+AMPQ_SERVER = "bear.rmq.cloudamqp.com"
+AMPQ_PORT = "5672"
+AMPQ_VHOST = "yfgdidtf"
+AMPQ_USER = "yfgdidtf"
+AMPQ_PASSWORD = "aLtpRcSFOcugHUj9F6mpskEiHeaGKn1d"
