@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'orders.apps.OrdersConfig',
     'tickers.apps.TickersConfig',
-    'market.apps.MarketConfig',
+    'markets.apps.MarketsConfig',
     'celery'
 ]
 
