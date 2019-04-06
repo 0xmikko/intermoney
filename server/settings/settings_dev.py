@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'tickers.apps.TickersConfig',
     'markets.apps.MarketsConfig',
     'balances.apps.BalancesConfig',
+    'trades.apps.TradesConfig',
     'celery'
 ]
 
