@@ -2,6 +2,7 @@ cd server
 python manage.py migrate
 python manage.py collectstatic
 
+export DJANGO_SETTINGS_MODULE=settings.settings_dev
 export DJANGO_DB_NAME=default
 export DJANGO_SU_NAME=admin
 export DJANGO_SU_EMAIL=admin@my.company
