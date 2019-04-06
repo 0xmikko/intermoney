@@ -58,4 +58,3 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, blank=True, null=True)
-
