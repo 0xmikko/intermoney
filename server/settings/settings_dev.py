@@ -26,6 +26,7 @@ SECRET_KEY = '#8a(j&_!!sj-&y91+pp&rhzbsayhc@6*2jk&&6(l+^2xxo8$f#'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'intermoney.herokuapp.com']
+CORS_ORIGIN_ALLOW_ALL = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "sitestatic")
 STATIC_URL = '/static/'
