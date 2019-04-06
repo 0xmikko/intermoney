@@ -8,5 +8,25 @@ class Market(models.Model):
     base_currency = models.ForeignKey(Ticker, blank=True, on_delete=models.CASCADE, null=True, related_name='base_market')
     quote_currency = models.ForeignKey(Ticker, blank=True, on_delete=models.CASCADE, null=True, related_name='quote_market')
 
+    @property
+    def last_price(self):
+        pass
+
+    @property
+    def max_24_price(self):
+        pass
+
+    @property
+    def min_24_price(self):
+        pass
+
+    @property
+    def volume_24(self):
+        pass
+
+    @property
+    def change_24(self):
+        pass
+
 
 

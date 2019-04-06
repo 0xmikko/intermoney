@@ -26,7 +26,7 @@ SECRET_KEY = '#8a(j&_!!sj-&y91+pp&rhzbsayhc@6*2jk&&6(l+^2xxo8$f#'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+STATIC_ROOT = os.path.join(BASE_DIR, "sitestatic")
 
 # Application definition
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'orders.apps.OrdersConfig',
     'tickers.apps.TickersConfig',
     'markets.apps.MarketsConfig',
@@ -84,6 +85,16 @@ DATABASES = {
     }
 }
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
