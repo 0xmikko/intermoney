@@ -28,9 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'intermoney.herokuapp.com']
 CORS_ORIGIN_ALLOW_ALL = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, "sitestatic")
-STATIC_URL = '/static/'
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -140,12 +137,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "sitestatic")
 STATIC_URL = '/static/'
 
-CELERY_URL = 'amqp://yfgdidtf:yfgdidtf@bear.rmq.cloudamqp.com:5672//'
+# Celery
 
-AMPQ_SERVER = "bear.rmq.cloudamqp.com"
-AMPQ_PORT = "5672"
-AMPQ_VHOST = "yfgdidtf"
-AMPQ_USER = "yfgdidtf"
-AMPQ_PASSWORD = "aLtpRcSFOcugHUj9F6mpskEiHeaGKn1d"
+CELERY_URL = 'amqp://yfgdidtf:yfgdidtf@bear.rmq.cloudamqp.com:5672//'
