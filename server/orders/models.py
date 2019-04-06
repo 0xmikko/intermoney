@@ -1,5 +1,5 @@
 from django.db import models
-from market.models import Market
+from markets.models import Market
 
 
 class Order(models.Model):
