@@ -72,7 +72,7 @@ result array of JSON:
     
     type - int (1 - limit, 2 - market)
     
-    side - int (-1 - sell, 1 - buy)
+    side - int (0 - sell, 1 - buy)
     
     status - int (0 - pendingnew, 1 - new, 2 -            rejected, 3 - cancelled, 4 - partially            filled, 5 - filled)
 
