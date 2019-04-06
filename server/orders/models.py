@@ -4,13 +4,16 @@ from markets.models import Market
 
 
 class Order(models.Model):
+    """
+
+    """
 
     SIDE_BUY = 1
     SIDE_SELL = -1
 
     STATUS_UNKNOWN = 0
 
-    sender =models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
     side = models.IntegerField(default=1)
 
     price = models.IntegerField(default=0)
