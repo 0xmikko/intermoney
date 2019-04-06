@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from markets.models import Market
 
 
@@ -9,12 +10,15 @@ class Order(models.Model):
 
     STATUS_UNKNOWN = 0
 
-    sender = models.CharField(max_length=42, default=('0x0'))
+    sender =models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
     side = models.IntegerField(default=1)
 
-    size = models.DecimalField(decimal_places=2, default=0, max_digits=10)
-    filled = models.DecimalField(decimal_places=2, default=0, max_digits=10)
+    price = models.IntegerField(default=0)
+    size = models.IntegerField(default=0)
+
+    filled = models.IntegerField(default=0)
     status = models.IntegerField(default=0)
+    hash_signature = models.CharField(max_length=1024, default='')
     market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, blank=True, null=True)
