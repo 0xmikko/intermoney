@@ -15,11 +15,14 @@ price - float
 
 hash_signature - string
 
-Return:
+Return JSON:
+{
 
-error -  string or null if ok
-result - string, order_id 
+    error -  string or null if ok
 
+    result - string, order_id 
+
+}
 
 
 ## /api/market_sell
@@ -36,10 +39,12 @@ size - decimal
 hash_signature - string
 
 Return (JSON):
+{
 
-error -  string or null if ok
-result - string, order_id 
+    error -  string or null if ok
 
+    result - string, order_id 
+}
 
 ## /api/order_list
 user_id - address
@@ -47,9 +52,12 @@ user_id - address
 signature - HMAC
 
 Return (JSON)
+
 error  - string or null of ok
+
 result array JSON:
 {
+    
     id - uint
 
     market - string
@@ -61,7 +69,8 @@ result array JSON:
     type - int (1 - limit, 2 - market)
     
     side - int (-1 - sell, 1 - buy)
-status - int (0 - pendingnew, 1 - new, 2 -            rejected, 3 - cancelled, 4 - partially            filled, 5 - filled)
+    
+    status - int (0 - pendingnew, 1 - new, 2 -            rejected, 3 - cancelled, 4 - partially            filled, 5 - filled)
 
     filled - decimal 
 
@@ -82,8 +91,12 @@ Return (JSON):
 error - string or null
 result - trades array JSON
 {
+
 	market : string
+
 	timestamp  :  int
-	size   : deciaml
+	
+    size   : deciaml
+    
     price  : decimal
 }
