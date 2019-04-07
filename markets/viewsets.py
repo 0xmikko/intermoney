@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -44,6 +46,8 @@ class MarketsViewSet(viewsets.ModelViewSet):
         bots = []
 
         for name in names:
+            print(name)
+            print(bots)
             queryset = USER_MODEL.objects.filter(username=name)
             if queryset.count() > 0:
                 queryset.delete()
@@ -52,42 +56,49 @@ class MarketsViewSet(viewsets.ModelViewSet):
             bots.append(new_bot)
 
         strategy_count = 3
-        for num, bot in enumerate(bots):
+        num =0
 
-            if num % strategy_count == 0:
-                for i in range(20):
-                    Order.objects.create(sender=bot,
-                                         side=Order.SIDES_SELL,
-                                         price=10000 + i * 100,
-                                         size=100000 + i * 10000,
-                                         filled=0,
-                                         status=Order.STATUS_WAITING_NEW,
-                                         hash_signature="SIGA",
-                                         market=market_usd_eur)
+        for market in (market_eur_usd, market_usd_eur):
+            for bot in bots:
+                print("FFFF")
+                print(bot)
 
-            if num % strategy_count == 1:
-                for i in range(20):
-                    Order.objects.create(sender=bot,
-                                         side=Order.SIDES_BUY,
-                                         price=10000 - i * 100,
-                                         size=100000 + i * 10000,
-                                         filled=0,
-                                         status=Order.STATUS_WAITING_NEW,
-                                         hash_signature="SIGA",
-                                         market=market_usd_eur)
+                if num % strategy_count == 0:
+                    for i in range(20):
+                        Order.objects.create(sender=bot,
+                                             side=Order.SIDES_SELL,
+                                             price=10000 + i * 100,
+                                             size=100000 + i * 10000,
+                                             filled=0,
+                                             status=Order.STATUS_WAITING_NEW,
+                                             hash_signature="SIGA",
+                                             market=market)
 
-            if num % strategy_count == 2:
-                for i in range(2):
-                    Order.objects.create(sender=bot,
-                                         side=Order.SIDES_BUY,
-                                         price=0,
-                                         size=100000 + i * 10000,
-                                         filled=0,
-                                         status=Order.STATUS_WAITING_NEW,
-                                         hash_signature="SIGA",
-                                         market=market_usd_eur)
+                if num % strategy_count == 1:
+                    for i in range(20):
+                        Order.objects.create(sender=bot,
+                                             side=Order.SIDES_BUY,
+                                             price=10000 - i * 100,
+                                             size=100000 + i * 10000,
+                                             filled=0,
+                                             status=Order.STATUS_WAITING_NEW,
+                                             hash_signature="SIGA",
+                                             market=market)
 
-            return Response("Bots were created", status=status.HTTP_200_OK)
+                if num % strategy_count == 2:
+                    for i in range(20):
+                        Order.objects.create(sender=bot,
+                                             side=Order.SIDES_BUY,
+                                             price=0,
+                                             size=100000 + i * 10000,
+                                             filled=0,
+                                             status=Order.STATUS_WAITING_NEW,
+                                             hash_signature="SIGA",
+                                             market=market)
+
+                num += 1
+
+        return Response("Bots were created", status=status.HTTP_200_OK)
 
     @action(detail=True)
     def process(self, request, pk):
@@ -95,6 +106,35 @@ class MarketsViewSet(viewsets.ModelViewSet):
         market_obj.process_queue()
         return Response("Matching cycle was done", status=status.HTTP_200_OK)
 
+
+    @action(detail=True)
+    def orderbook(self, request, pk):
+        from orders.models import Order
+        from .serializers import Level2Serializer
+        market_obj = get_object_or_404(Market, pk=pk)
+        market_obj.process_queue()
+        market_obj.process_queue()
+        market_obj.process_queue()
+        asks = market_obj.get_level2(Order.SIDES_SELL)
+        bids = market_obj.get_level2(Order.SIDES_BUY)
+
+
+        print(asks)
+        print(bids)
+        asks_array = []
+        bids_array = []
+        for l in asks:
+            price = str(l.get("price", 0))
+            size = str(l.get("size", 0))
+            asks_array.append([price, size])
+
+        for l in bids:
+            price = str(l.get("price", 0))
+            size = str(l.get("size", 0))
+            bids_array.append([price, size])
+
+        l2 = {"ask": asks_array, "bid": bids_array}
+        return Response(l2, status=status.HTTP_200_OK)
 
 
 
