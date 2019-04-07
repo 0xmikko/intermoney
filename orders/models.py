@@ -58,3 +58,11 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, blank=True, null=True)
+
+
+    def fill(self, filled : int):
+        self.filled += filled
+        if self.size > self.filled:
+            self.status = Order.STATUS_PARTIALLUY_FILLED
+        else:
+            self.status = Order.STATUS_FILLED
