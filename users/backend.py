@@ -23,7 +23,7 @@ class EthereumAuthentication(BaseAuthentication):
 
         if username == "":
             msg = "No user address was found"
-            raise exceptions.AuthenticationFailed(msg)
+            return (None, None)
 
         print(username)
 
