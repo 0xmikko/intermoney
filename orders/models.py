@@ -40,8 +40,17 @@ class Order(models.Model):
         (STATUS_UPDATED, "Updated"),
     )
 
+    ORDER_LIMIT = 0
+    ORDER_MARKET = 1
+
+    ORDERS_TYPES = (
+        (ORDER_LIMIT, "Limit"),
+        (ORDER_MARKET, "Market"),
+    )
+
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
     market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True)
+    order_type = models.IntegerField(default=ORDER_LIMIT)
 
     side = models.IntegerField(default=1)
 

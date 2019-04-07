@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework import status
@@ -7,6 +9,8 @@ from markets.models import Market
 from .models import Order
 from .serializers import OrderSerializer
 
+
+USER_MODEL = get_user_model()
 
 class OrdersViewSet(viewsets.ModelViewSet):
     """
@@ -30,13 +34,21 @@ class OrdersViewSet(viewsets.ModelViewSet):
         except Market.DoesNotExist:
             return Response("Market not found", status=status.HTTP_400_BAD_REQUEST)
 
-
     @action(detail=False)
     def active(self, request):
+
+        print(request.user)
+        if request.user.is_anonymous():
+            return Response("Authentication error", status=status.HTTP_400_BAD_REQUEST)
+
+        user = USER_MODEL(pk=request.user)
+        print(user)
         # Paginator
         page = request.GET.get("page")
         size = request.GET.get("size")
         type = request.GET.get("type")
+
+        queryset = Order.objects.filter(status=Order.STATUS_WAITING_NEW, sender=user)
 
     @action(detail=False)
     def history(self, request):
