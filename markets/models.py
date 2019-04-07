@@ -31,5 +31,30 @@ class Market(models.Model):
     def change_24(self):
         pass
 
+    def _get_bid_ask(self):
+        """
+
+        :return: tuple with bid and ask price
+        """
+        from orders.models import Order
+        bid = self.order_set.filter(side=Order.SIDES_BUY,
+                                    status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLUY_FILLED])\
+                  .exclude(price=0)\
+                  .order_by("-price")
+
+        ask = self.order_set.filter(side=Order.SIDES_SELL,
+                                    status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLUY_FILLED])\
+                  .exclude(price=0)\
+                  .order_by("price")
+
+        bid_price = None
+        ask_price = None
+
+        if len(bid) > 0:
+            bid_price = bid[0].price
+        if len(ask) > 0:
+            ask_price = ask[0].price
+
+        return (bid_price, ask_price)
 
 

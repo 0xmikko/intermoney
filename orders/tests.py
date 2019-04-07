@@ -9,7 +9,8 @@ from django.db.models import Sum
 
 USER_MODEL = get_user_model()
 
-class Matching():
+
+class Matching:
     @staticmethod
     def get_bid_ask( market : Market):
         bid = market.order_set.filter(side=Order.SIDES_BUY, status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]).exclude(price=0).order_by("-price")
@@ -21,11 +22,10 @@ class Matching():
         if len(ask) > 0:
             ask_price = ask[0].price
 
-        return (bid_price, ask_price)
-
+        return bid_price, ask_price
 
     @staticmethod
-    def take( order: Order):
+    def take(order: Order):
         depth = []
         if order.side == Order.SIDES_SELL:
             depth = order.market.order_set.filter(side=Order.SIDES_BUY, status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]).exclude(price=0).order_by("-price")
