@@ -1,3 +1,4 @@
+import requests
 from django.db import models
 from django.conf import settings
 from markets.models import Market
@@ -53,6 +54,7 @@ class Order(models.Model):
     order_type = models.IntegerField(default=ORDER_LIMIT, choices=ORDERS_TYPES)
 
     side = models.IntegerField(default=1, choices=SIDES_CHOICES)
+    nonce = models.IntegerField(default=0)
 
     price = models.DecimalField(default=0, max_digits=40, decimal_places=0)
     size = models.DecimalField(default=0, max_digits=40, decimal_places=0)
@@ -127,3 +129,5 @@ class Order(models.Model):
 
             if self.status == self.STATUS_FILLED:
                 break
+
+

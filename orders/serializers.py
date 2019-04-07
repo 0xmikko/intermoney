@@ -18,7 +18,8 @@ class OrderSerializer(serializers.ModelSerializer):
             'filled',
             'status',
             'hash_signature',
-            'created_at'
+            'created_at',
+            'nonce'
         )
         read_only_fields = ('order_type', 'market_display', 'status', 'filled', 'side',  'created_at')
 
