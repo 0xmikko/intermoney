@@ -73,6 +73,16 @@ For authorized traders shows balances, orders, allows to send market or limit or
 
 
 <b>Tokenized asset smart-contract</b>
+A standard ERC-20 token contract with alowance function. Existing or new contarcts can be added to the system. 
+
+<b>Asset Interaction contract</b>
+Contract holding traders balances accesible for trading. Each traded asset requires deployment new contract. Goverance interacts with the system through this contract. Freeze function should be added to guarantee presence of funds any moment, otherwise backed lister to contract events and remove orders if trader transfers funds from the account and cannot guarantee the execution. 
+
+
+<b>Trade execution smart contarct</b>
+Processes trades informaion received from backend and writes informaion to blockchain, makes sure orders are properly signed by owners and trades doesn't violate orders parameters. Signature gaurantees the order belongs to account owner, nonce value guarantees there will be no duplicated trades, blockchain order storage guarantees required order value is not overfilled.
+If match is validated Asset Interaction contract is called to perfrom transaction between buyers and sellers account. 
+
 
 
 <b>Exchange smart contract</b>
@@ -118,4 +128,22 @@ Following features are a subject for more accurate studying:
 
 ## Conclusion 
 We should make maximum efforts to work out to understand fully all the potential profits and discover disadvantages and risks, however even on such a preliminary phase we see great potential for combining technology to achieve maixumum security, privacy and sustainability for traders. 
+
+## Links
+
+https://github.com/kataloo/DSXTContracts - Smart Contracts repository
+
+https://github.com/kataloo/dsxt-sc-caller - Smart Contract interaction server repository
+
+https://github.com/masquel/intermoney-front - InterMoney Exchange FrontEnd repository
+
+https://github.com/MikaelLazarev/intermoney - InterMOney Exchange BackEnd repository (this one)
+
+https://rinkeby.etherscan.io/address/0x1b1db1206837661f51e9b96a58a61f9f67b1c670 - link to Rinkeby deployed contract on Etherscan
+
+http://intermoney.herokuapp.com/docs/ - backend API documentation
+
+
+
+
 
