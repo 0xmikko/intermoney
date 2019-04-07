@@ -32,7 +32,7 @@ class EthereumAuthentication(BaseAuthentication):
         users = USER_MODEL.objects.filter(username=username)
         print(users.count())
         if users.count() == 0:
-            user = USER_MODEL.objects.create_user(username=username, email="tt@ya.ru", password=hash(username))
+            user = USER_MODEL.objects.create_user(username=username, password=hash(username))
         else:
             user = users[0]
 
