@@ -3,18 +3,33 @@ from rest_framework.decorators import action
 from rest_framework import status
 from rest_framework.response import Response
 
+from markets.models import Market
 from .models import Order
 from .serializers import OrderSerializer
 
 
 class OrdersViewSet(viewsets.ModelViewSet):
+    """
+    Orders API
+    GET /api/orders/orderbook - returns orderbook
+    GET /api/orders/active - return active user orders
+    GET /api/orders/history - return history of user orders
+    POST /api/orders/buy_market
+    """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
     @action(detail=False)
     def orderbook(self, request):
         market_name = request.GET.get("market")
-        pass
+
+        try:
+            market = Market.get_market_by_tickers(market_name)
+            return Response("It works", status=status.HTTP_200_OK)
+
+        except Market.DoesNotExist:
+            return Response("Market not found", status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(detail=False)
     def active(self, request):

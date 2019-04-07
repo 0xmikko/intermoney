@@ -13,6 +13,7 @@ class OrderSerializer(serializers.ModelSerializer):
     def get_market_display(self, obj):
         return str(obj.market)
 
+
 class OrderUser(serializers.ModelSerializer):
 
     signature = serializers.CharField()
