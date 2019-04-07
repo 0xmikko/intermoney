@@ -8,10 +8,12 @@ from rest_framework.routers import DefaultRouter
 
 from orders.viewsets import OrdersViewSet
 from markets.viewsets import MarketsViewSet
+from trades.viewsets import TradesViewSet
 
 router = DefaultRouter()
 router.register("orders", OrdersViewSet)
 router.register("markets", MarketsViewSet)
+router.register("trades", TradesViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
