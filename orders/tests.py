@@ -30,8 +30,7 @@ class Matching:
         if side == Order.SIDES_BUY:
             order_direction = "-"
         level2 = Order.objects.filter(side=side,
-                                      status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]s)
-            #.aggregate(Sum('size'))
+                                      status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]).order_by(order_direction+"price").values("price").annotate(size=Sum('size')-Sum('filled'))
         return level2
 
 
@@ -126,5 +125,12 @@ class TestOrder(TestCase):
         print("---Level2 BID-----")
         level2 = Matching.return_level2("EUR/USD", Order.SIDES_SELL)
         for l in level2:
-            print(f'Size {l.liq} Price {m.price} Direction {m.side}')
+            print(l)
+            #print(f'Size {l.size} Price {l.price} Direction {l.side}')
 
+
+        print("---Level2 ASK-----")
+        level2 = Matching.return_level2("EUR/USD", Order.SIDES_BUY)
+        for l in level2:
+            print(l)
+            #print(f'Size {l.size} Price {l.price} Direction {l.side}')
