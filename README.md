@@ -85,8 +85,6 @@ If match is validated Asset Interaction contract is called to perfrom transactio
 
 
 
-<b>Exchange smart contract</b>
-
 ## Workflow 
 Trader enters order parameters and signes it with its private key over Metamask Google Chrome plugin. This is not a blockchain transaction but a SECP256K1 ECDSA signature of Keccak-256 hash of ABI encoded parameters. 
 
