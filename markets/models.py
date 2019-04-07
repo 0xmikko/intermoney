@@ -2,7 +2,6 @@ from django.db import models
 from tickers.models import Ticker
 
 
-
 class Market(models.Model):
     """
     Market is an entity which 
@@ -41,11 +40,16 @@ class Market(models.Model):
         :param name:
         :return:
         """
-        objs = Market.objects.get(name=name)
+        objs = Market.objects.filter(name=name)
         if objs.count() != 1:
             raise Market.DoesNotExist
 
         return objs[0]
+
+    def process_queue(self):
+        queue = self.order_set.filter(status=Order.STATUS_WAITING_NEW).order_by("created_at")
+        for order in queue:
+            order.process()
 
 
     def _get_bid_ask(self):

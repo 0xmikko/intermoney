@@ -71,3 +71,53 @@ class Order(models.Model):
             self.status = Order.STATUS_PARTIALLY_FILLED
         else:
             self.status = Order.STATUS_FILLED
+
+    def process(self):
+        if self.status == self.STATUS_WAITING_NEW:
+            self.status = self.STATUS_NEW
+            self.save()
+
+        #            best_bid_price, best_ask_price = self.get_bid_ask(self.market)
+        if self.price == 0:
+            self.take()
+            self.status = self.STATUS_FILLED
+            self.save()
+        if self.price != 0:
+            self.take()
+            
+            
+    def take(self):
+        from trades.models import Trade
+        depth = []
+        if self.side == self.SIDES_SELL:
+            depth = self.market.self_set.filter(side=self.SIDES_BUY, status__in=[self.STATUS_NEW, self.STATUS_UPDATED, self.STATUS_PARTIALLY_FILLED]).exclude(price=0).self_by("-price")
+
+        if self.side == self.SIDES_BUY:
+            depth = self.market.self_set.filter(side=self.SIDES_SELL, status__in=[self.STATUS_NEW, self.STATUS_UPDATED, self.STATUS_PARTIALLY_FILLED]).exclude(price=0).self_by("price")
+
+        for o in depth:
+            if (self.side == self.SIDES_SELL and self.price != 0 and self.price > o.price) or (self.side == self.SIDES_BUY and self.price != 0 and self.price < o.price):
+                break
+
+            if self.size - self.filled > o.size - o.filled:
+                fill_size = o.size - o.filled
+            else:
+                fill_size = self.size - self.filled
+
+            o.fill(fill_size)
+            self.fill(fill_size)
+            o.save()
+            self.save()
+
+            if self.side == self.SIDES_SELL:
+                self_buy = o
+                self_sell = self
+            else:
+                self_buy = self
+                self_sell = o
+
+            Trade.objects.create(self_buy=self_buy, self_sell = self_sell, price = o.price, side = self.side,
+                                 size=fill_size)
+
+            if self.status == self.STATUS_FILLED:
+                break

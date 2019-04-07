@@ -25,62 +25,6 @@ class Matching:
         return bid_price, ask_price
 
     @staticmethod
-    def take(order: Order):
-        depth = []
-        if order.side == Order.SIDES_SELL:
-            depth = order.market.order_set.filter(side=Order.SIDES_BUY, status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]).exclude(price=0).order_by("-price")
-        if order.side == Order.SIDES_BUY:
-            depth = order.market.order_set.filter(side=Order.SIDES_SELL, status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]).exclude(price=0).order_by("price")
-        for o in depth:
-            if (order.side == Order.SIDES_SELL and order.price != 0 and order.price > o.price) or (order.side == Order.SIDES_BUY and order.price != 0 and order.price < o.price):
-                break
-            if order.size - order.filled > o.size - o.filled:
-                fill_size = o.size - o.filled
-            else:
-                fill_size = order.size - order.filled
-            o.fill( fill_size )
-            order.fill( fill_size )
-            o.save()
-            order.save()
-            if order.side == Order.SIDES_SELL:
-                order_buy = o
-                order_sell = order
-            else:
-                order_buy = order
-                order_sell = o
-
-
-            Trade.objects.create(
-                order_buy = order_buy,
-                order_sell = order_sell,
-                price = o.price,
-                side = order.side,
-                size = fill_size
-            )
-            if order.status == Order.STATUS_FILLED:
-                break
-
-    @staticmethod
-    def process_order( order: Order ):
-        if order.status == Order.STATUS_WAITING_NEW:
-            order.status = Order.STATUS_NEW
-            order.save()
-
-#            best_bid_price, best_ask_price = self.get_bid_ask(order.market)
-            if order.price == 0:
-                Matching.take(order)
-                order.status = Order.STATUS_FILLED
-                order.save()
-            if order.price != 0:
-                Matching.take(order)
-
-    @staticmethod
-    def process_queue():
-        queue = Order.objects.filter( status=Order.STATUS_WAITING_NEW ).order_by("created_at")
-        for o in queue:
-            Matching.process_order(o)
-
-    @staticmethod
     def return_level2(market: str, side : int):
         order_direction = ""
         if side == Order.SIDES_BUY:
@@ -149,7 +93,6 @@ class TestOrder(TestCase):
             print(order.price, order.size)
 
 
-
     def test_get_level_1(self):
         bid = Market.objects.all()[0].order_set.filter(side=Order.SIDES_BUY, status__in=[Order.STATUS_WAITING_NEW]).exclude(price=0).order_by("-price")
         ask = Market.objects.all()[0].order_set.filter(side=Order.SIDES_SELL, status__in=[Order.STATUS_WAITING_NEW]).exclude(price=0).order_by("price")
@@ -165,7 +108,7 @@ class TestOrder(TestCase):
     def test_execution(self):
         print("---Execution test----")
 
-        Matching.process_queue()
+        self.market.process_queue()
         orders = Order.objects.filter().exclude(status__in=[Order.STATUS_WAITING_NEW])
 
         print("---Orders----")
