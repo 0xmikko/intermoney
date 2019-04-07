@@ -30,7 +30,7 @@ class Matching:
         if side == Order.SIDES_BUY:
             order_direction = "-"
         level2 = Order.objects.filter(side=side,
-                                      status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED])
+                                      status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED]s)
             #.aggregate(Sum('size'))
         return level2
 

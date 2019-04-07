@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from orders.models import Order
@@ -88,6 +89,13 @@ class MarketsViewSet(viewsets.ModelViewSet):
                                          market=market_usd_eur)
 
             return Response("Bots were created", status=status.HTTP_200_OK)
+
+    @action(detail=True)
+    def process(self, requestm, pk):
+        market_obj = get_object_or_404(Market, pk=pk)
+        market_obj.process_queue()
+        return Response("Matching cycle was done", status=status.HTTP_200_OK)
+
 
 
 

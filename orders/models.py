@@ -49,7 +49,7 @@ class Order(models.Model):
     )
 
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
-    market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True)
+    market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True, related_name='order_set')
     order_type = models.IntegerField(default=ORDER_LIMIT)
 
     side = models.IntegerField(default=1)
