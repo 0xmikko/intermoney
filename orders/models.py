@@ -24,7 +24,7 @@ class Order(models.Model):
     STATUS_REJECTED = 4
     STATUS_WAITING_CANCELLED = 5
     STATUS_CANCELLED = 6
-    STATUS_PARTIALLUY_FILLED = 7
+    STATUS_PARTIALLY_FILLED = 7
     STATUS_FILLED = 8
     STATUS_WAITING_UPDATE = 9
     STATUS_UPDATED = 10
@@ -36,7 +36,7 @@ class Order(models.Model):
         (STATUS_REJECTED, "Rejected"),
         (STATUS_WAITING_CANCELLED, "Waiting Cancel"),
         (STATUS_CANCELLED, "Cancelled"),
-        (STATUS_PARTIALLUY_FILLED, "Partially Filled"),
+        (STATUS_PARTIALLY_FILLED, "Partially Filled"),
         (STATUS_FILLED, "Filled"),
         (STATUS_WAITING_UPDATE, "Waiting Update"),
         (STATUS_UPDATED, "Updated"),
@@ -63,6 +63,6 @@ class Order(models.Model):
     def fill(self, filled : int):
         self.filled += filled
         if self.size > self.filled:
-            self.status = Order.STATUS_PARTIALLUY_FILLED
+            self.status = Order.STATUS_PARTIALLY_FILLED
         else:
             self.status = Order.STATUS_FILLED

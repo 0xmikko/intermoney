@@ -8,12 +8,27 @@ class Trade(models.Model):
     SIDES_BUY = 1
     SIDES_SELL = 0
 
+    STATUS_NEW = 0
+    STATUS_PROCESSING = 1
+    STATUS_OK = 2
+    STATUS_REJECTED = 3
+
     SIDES_CHOICES = (
         (SIDES_BUY, 'BUY'),
         (SIDES_SELL, 'SELL'),
     )
 
+    STATUS_CHOICES = (
+        (STATUS_NEW, 'NEW'),
+        (STATUS_PROCESSING, 'PROCESSING'),
+        (STATUS_OK, 'OK'),
+        (STATUS_REJECTED, 'REJECTED')
+
+    )
+
     order_buy = models.ForeignKey(Order, related_name="trade_buy", on_delete=models.CASCADE)
     order_sell = models.ForeignKey(Order, related_name="trade_sell", on_delete=models.CASCADE)
     price = models.IntegerField(default=0)
+    size = models.IntegerField(default=0)
     side = models.IntegerField(default=0, choices=SIDES_CHOICES)
+    status = models.IntegerField(default=STATUS_NEW, choices=STATUS_CHOICES)
