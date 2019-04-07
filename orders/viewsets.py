@@ -130,7 +130,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
     def get_next_nonce(self, request):
         user = request.user
         if user is None:
-            return Response("You should be authred", status=status.HTTP_401_UNAUTHORIZED)
+            return Response("You should be authenficated", status=status.HTTP_401_UNAUTHORIZED)
         user.get_new_nonce()
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
