@@ -47,9 +47,8 @@ class MarketsViewSet(viewsets.ModelViewSet):
             queryset = USER_MODEL.objects.filter(username=name)
             if queryset.count() > 0:
                 queryset.delete()
-            new_bot_email = name + "@inmtermoney.com"
             pwd = name + "pwd"
-            new_bot = USER_MODEL.objects.create_user(username=name, email=new_bot_email, password=pwd)
+            new_bot = USER_MODEL.objects.create_user(username=name, password=pwd)
             bots.append(new_bot)
 
         strategy_count = 3
