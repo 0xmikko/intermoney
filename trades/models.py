@@ -23,7 +23,6 @@ class Trade(models.Model):
         (STATUS_PROCESSING, 'PROCESSING'),
         (STATUS_OK, 'OK'),
         (STATUS_REJECTED, 'REJECTED')
-
     )
 
     order_buy = models.ForeignKey(Order, related_name="trade_buy", on_delete=models.CASCADE)
@@ -32,3 +31,6 @@ class Trade(models.Model):
     size = models.IntegerField(default=0)
     side = models.IntegerField(default=0, choices=SIDES_CHOICES)
     status = models.IntegerField(default=STATUS_NEW, choices=STATUS_CHOICES)
+
+    created_at = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, editable=True, blank=True, null=True)

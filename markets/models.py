@@ -2,6 +2,7 @@ from django.db import models
 from tickers.models import Ticker
 
 
+
 class Market(models.Model):
     """
     Market is an entity which 
@@ -13,7 +14,9 @@ class Market(models.Model):
 
     @property
     def last_price(self):
-        return 0
+        from trades.models import Trade
+        last_trade = Trade.objects.filter(status=Trade.STATUS_OK).order_by("-created_at").last()
+        return last_trade.price if last_trade != None else 0
 
     @property
     def max_24_price(self):

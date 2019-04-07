@@ -1,5 +1,3 @@
-from enum import Enum
-
 from django.db import models
 from django.conf import settings
 from markets.models import Market
@@ -42,7 +40,6 @@ class Order(models.Model):
         (STATUS_UPDATED, "Updated"),
     )
 
-
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
     market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True)
 
@@ -58,7 +55,6 @@ class Order(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, blank=True, null=True)
-
 
     def fill(self, filled : int):
         self.filled += filled
