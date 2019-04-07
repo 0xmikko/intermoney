@@ -12,7 +12,7 @@ class UserManager(BaseUserManager):
     to create `User` objects.
     """
 
-    def create_user(self, username, email=None, password=None):
+    def create_user(self, username, password=None):
         """Create and return a `User` with an email, username and password."""
         if username is None:
             raise TypeError('Users must have a username.')
@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
             print("FUC")
             raise ValueError('User with this username is already exists')
 
-        user = self.model(username=username, email=username)
+        user = self.model(username=username)
         user.set_password(password)
         user.save()
 
@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         if password is None:
             raise TypeError('Superusers must have a password.')
 
-        user = self.create_user(username,username, password)
+        user = self.create_user(username, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -50,11 +50,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     # database to improve lookup performance.
     username = models.CharField(db_index=True, max_length=255, unique=True)
 
-    # We also need a way to contact the user and a way for the user to identify
-    # themselves when logging in. Since we need an email address for contacting
-    # the user anyways, we will also use the email for logging in because it is
-    # the most common form of login credential at the time of writing.
-    email = models.EmailField(db_index=True, unique=True)
     nonce = models.IntegerField(default=0)
 
     # When a user no longer wishes to use our platform, they may try to delete
@@ -84,7 +79,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
     # In this case we want it to be the email field.
     USERNAME_FIELD = 'username'
-    #REQUIRED_FIELDS = ['username']
 
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
