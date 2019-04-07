@@ -58,44 +58,45 @@ class MarketsViewSet(viewsets.ModelViewSet):
         strategy_count = 3
         num =0
 
-        for bot in bots:
-            print("FFFF")
-            print(bot)
+        for market in (market_eur_usd, market_usd_eur):
+            for bot in bots:
+                print("FFFF")
+                print(bot)
 
-            if num % strategy_count == 0:
-                for i in range(20):
-                    Order.objects.create(sender=bot,
-                                         side=Order.SIDES_SELL,
-                                         price=10000 + i * 100,
-                                         size=100000 + i * 10000,
-                                         filled=0,
-                                         status=Order.STATUS_WAITING_NEW,
-                                         hash_signature="SIGA",
-                                         market=market_usd_eur)
+                if num % strategy_count == 0:
+                    for i in range(20):
+                        Order.objects.create(sender=bot,
+                                             side=Order.SIDES_SELL,
+                                             price=10000 + i * 100,
+                                             size=100000 + i * 10000,
+                                             filled=0,
+                                             status=Order.STATUS_WAITING_NEW,
+                                             hash_signature="SIGA",
+                                             market=market)
 
-            if num % strategy_count == 1:
-                for i in range(20):
-                    Order.objects.create(sender=bot,
-                                         side=Order.SIDES_BUY,
-                                         price=10000 - i * 100,
-                                         size=100000 + i * 10000,
-                                         filled=0,
-                                         status=Order.STATUS_WAITING_NEW,
-                                         hash_signature="SIGA",
-                                         market=market_usd_eur)
+                if num % strategy_count == 1:
+                    for i in range(20):
+                        Order.objects.create(sender=bot,
+                                             side=Order.SIDES_BUY,
+                                             price=10000 - i * 100,
+                                             size=100000 + i * 10000,
+                                             filled=0,
+                                             status=Order.STATUS_WAITING_NEW,
+                                             hash_signature="SIGA",
+                                             market=market)
 
-            if num % strategy_count == 2:
-                for i in range(20):
-                    Order.objects.create(sender=bot,
-                                         side=Order.SIDES_BUY,
-                                         price=0,
-                                         size=100000 + i * 10000,
-                                         filled=0,
-                                         status=Order.STATUS_WAITING_NEW,
-                                         hash_signature="SIGA",
-                                         market=market_usd_eur)
+                if num % strategy_count == 2:
+                    for i in range(20):
+                        Order.objects.create(sender=bot,
+                                             side=Order.SIDES_BUY,
+                                             price=0,
+                                             size=100000 + i * 10000,
+                                             filled=0,
+                                             status=Order.STATUS_WAITING_NEW,
+                                             hash_signature="SIGA",
+                                             market=market)
 
-            num += 1
+                num += 1
 
         return Response("Bots were created", status=status.HTTP_200_OK)
 
