@@ -3,6 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from markets.models import Market
@@ -37,18 +38,16 @@ class OrdersViewSet(viewsets.ModelViewSet):
     @action(detail=False)
     def active(self, request):
 
-        print(request.user)
-        if request.user.is_anonymous():
-            return Response("Authentication error", status=status.HTTP_400_BAD_REQUEST)
+        user = request.user
 
-        user = USER_MODEL(pk=request.user)
-        print(user)
         # Paginator
         page = request.GET.get("page")
         size = request.GET.get("size")
         type = request.GET.get("type")
 
         queryset = Order.objects.filter(status=Order.STATUS_WAITING_NEW, sender=user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(detail=False)
     def history(self, request):
@@ -59,16 +58,69 @@ class OrdersViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['POST'])
     def buy_market(self, request):
-        pass
+
+        user = request.user
+        data = request.data
+
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            obj = serializer.save()
+            obj.order_type = Order.ORDER_MARKET
+            obj.side = Order.SIDES_BUY
+            obj.status = Order.STATUS_WAITING_NEW
+            obj.sender = user
+            obj.save()
+            return Response("Order accepter", status=status.HTTP_200_OK)
+
+        return Response("Bad data", status=status.HTTP_400_OK)
 
     @action(detail=False, methods=['POST'])
     def sell_market(self, request):
-        pass
+        user = request.user
+        data = request.data
+
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            obj = serializer.save()
+            obj.order_type = Order.ORDER_MARKET
+            obj.side = Order.SIDES_SELL
+            obj.status = Order.STATUS_WAITING_NEW
+            obj.sender = user
+            obj.save()
+            return Response("Order accepter", status=status.HTTP_200_OK)
+
+        return Response("Bad data", status=status.HTTP_400_OK)
 
     @action(detail=False, methods=['POST'])
     def buy_limit(self, request):
-        pass
+        user = request.user
+        data = request.data
+
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            obj = serializer.save()
+            obj.order_type = Order.ORDER_LIMIT
+            obj.side = Order.SIDES_BUY
+            obj.status = Order.STATUS_WAITING_NEW
+            obj.sender = user
+            obj.save()
+            return Response("Order accepter", status=status.HTTP_200_OK)
+
+        return Response("Bad data", status=status.HTTP_400_OK)
 
     @action(detail=False, methods=['POST'])
     def sell_limit(self, request):
-        pass
+        user = request.user
+        data = request.data
+
+        serializer = self.get_serializer(data=data)
+        if serializer.is_valid():
+            obj = serializer.save()
+            obj.order_type = Order.ORDER_LIMIT
+            obj.side = Order.SIDES_SELL
+            obj.status = Order.STATUS_WAITING_NEW
+            obj.sender = user
+            obj.save()
+            return Response("Order accepter", status=status.HTTP_200_OK)
+
+        return Response("Bad data", status=status.HTTP_400_OK)

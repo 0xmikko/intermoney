@@ -8,10 +8,28 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = (
+            'market',
+            'market_display',
+            'order_type',
+            'side',
+            'price',
+            'size',
+            'filled',
+            'status',
+            'hash_signature'
+        )
+        read_only_fields = ('order_type', 'market_display', 'status', 'filled')
 
     def get_market_display(self, obj):
         return str(obj.market)
+
+
+class OrderMake(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
+
 
 
 class OrderUser(serializers.ModelSerializer):
