@@ -137,6 +137,8 @@ https://github.com/kataloo/dsxt-sc-caller - Smart Contract interaction server re
 
 https://github.com/masquel/intermoney-front - InterMoney Exchange FrontEnd repository
 
+https://github.com/MikaelLazarev/intermoney - InterMOney Exchange BackEnd repository (this one)
+
 https://rinkeby.etherscan.io/address/0x1b1db1206837661f51e9b96a58a61f9f67b1c670 - link to Rinkeby deployed contract on Etherscan
 
 http://intermoney.herokuapp.com/docs/ - backend API documentation
