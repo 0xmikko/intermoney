@@ -78,9 +78,25 @@ For authorized traders shows balances, orders, allows to send market or limit or
 <b>Exchange smart contract</b>
 
 ## Workflow 
-Trader enters order parameters and signes it with its private key over metamask. This is not a blockchain transaction but a SECP256K1 ECDSA signature of Keccak-256 hash of ABI encoded parameters. 
+Trader enters order parameters and signes it with its private key over Metamask Google Chrome plugin. This is not a blockchain transaction but a SECP256K1 ECDSA signature of Keccak-256 hash of ABI encoded parameters. 
 
-Signed orders is sent to exchange backend. Exchange backend assigns and returnes global order number and puts 
+Signed orders is sent to exchange backend. Exchange backend assigns and returns global order number and puts order to unprocessed orders queue, where orders are sorder and executes simultaneously sorted by order number. 
+
+Limit orders are provide liquidity, but if the price specified can match currently active orders, matching entine performs matching.  If order is not fully filled its status set to "PARTIALLY FILLED" and unfilled size is added to liquidity. 
+
+Market order takes the liquidity until order size os fully filled. If there's not enough liquidity, order status is set to "FILLED" anyway.
+
+Cancelling the order can be done in two ways : using exchange backend or by calling smart-contract directly. This guarantees that traders remain the full control over their funds, no matter if backend works or not. 
+
+Result of matched orders is sent to smart contract along with signed parameters of both orders. Smart contract validates orders parameters and checks that the trade suits them. 
+
+If validation was successful, smart contract exchange matched value of base asset and matched value multiplied to price of quote asset by calling "transfer" function of Assets smart contract. 
+
+## Goverance and Mutual mistrust principle 
+
+The protocol guarantees respect for the interests of all parties. 
+From one side this is well goverened regulatory compliant solution, protecting funds by goverance and from another side it provides appropriate level of privacy for traders, allows keeping full control over the funds while perfoming exchange operations based on mututal mistrust priciple. 
+<i>This is looking like the perfect middle between fully decentralized DEX and fully centralized cryptocurrency exchanges.</i>  
 
 
 
