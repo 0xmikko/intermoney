@@ -33,22 +33,18 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save()
 
-        # All users should be verified using email confirmation
-        user.send_verification_mail()
-
         # Send notification for new user registration
-        send_system_notification("TS Notification: New user registered", "New user %s was registered" % email)
 
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, username, password):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
         if password is None:
             raise TypeError('Superusers must have a password.')
 
-        user = self.create_user(username, email, password)
+        user = self.create_user(username,username, password)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -67,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # the user anyways, we will also use the email for logging in because it is
     # the most common form of login credential at the time of writing.
     email = models.EmailField(db_index=True, unique=True)
-
+    nonce = models.IntegerField(default=0)
 
     # When a user no longer wishes to use our platform, they may try to delete
     # their account. That's a problem for us because the data we collect is
@@ -95,8 +91,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
     # In this case we want it to be the email field.
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = 'username'
+    #REQUIRED_FIELDS = ['username']
 
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
@@ -108,106 +104,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         This string is used when a `User` is printed in the console.
         """
-        return self.email
+        return self.username
 
-    def authenficate_email(self) -> None:
-        from events.models import Event
-        self.is_verified = True
+    def get_new_nonce(self):
+        self.nonce += 1
         self.save()
-        Event.add_event(user=self, event=Event.EMAIL_VERIFIED)
-
-    def send_verification_mail(self) -> None:
-        """
-        Send verification email for new users
-        :return:
-        """
-        from events.models import Event
-        new_token = EmailToken.generate_token(self)
-        print(new_token)
-        html_message = render_to_string('email/verification_email.html',
-                                        {'action_url': ('https://alpha.tokenstarter.io/verify-email/' + new_token) })
-
-        self.send_email("Welcome to Tokenstarter", html_message=html_message)
-        Event.add_event(self, Event.VERIFICATION_EMAIL_SENT)
-
-    def send_email(self, subject: str, html_message: str):
-        """
-        Sends Email to user
-        :return:
-        """
-        plain_message = strip_tags(html_message)
-
-        msg = EmailMultiAlternatives(from_email='noreply@tokenstarter.io',
-                                     to=[self.email],
-                                     subject=subject,
-                                     body=plain_message)
-        msg.attach_alternative(html_message, "text/html")
-
-        msg.send()
-
-
-def send_system_notification(subject: str, message: str):
-    """
-    Send system notificaiton to superuser via email
-    :param message:
-    :return:
-    """
-    user = User.objects.filter(is_superuser=True).all()
-
-    # This test runs only for superuser creation, when no superuser registered
-    if user.count() > 0:
-        user[0].send_email(subject=subject, html_message=message)
-
-
-
-
-class EmailToken(models.Model):
-    """
-    EmailToken is used for email verification & resetting password
-    """
-    class Meta:
-        verbose_name = "Email Token"
-        verbose_name_plural = "Email Tokens"
-
-    token = models.CharField(default='', max_length=50)
-    user = models.OneToOneField(User, blank=None, on_delete=models.CASCADE, unique=True)
-    expiredAt = models.DateField(default=datetime.now)
-
-    @classmethod
-    def generate_token(cls, user: User) -> str:
-        obj, _ = cls.objects.get_or_create(user=user)
-        obj.token = PasswordResetTokenGenerator().make_token(user=user)
-        obj.expiredAt = datetime.now() + timedelta(days=7)
-        obj.save()
-        return obj.token
-
-    @classmethod
-    def verify_user_by_token(cls, token: str) -> bool:
-        """
-
-        :param token:
-        :return: True if email was verified successfully
-        False is token was not found or expired
-        """
-
-        try:
-            obj = EmailToken.objects.get(token=token)
-        except EmailToken.DoesNotExist:
-            return False
-
-        check = PasswordResetTokenGenerator().check_token(user=obj.user, token=token)
-
-        if not check:
-            # remove expired token
-            obj.delete()
-            return False
-
-        obj.user.authenficate_email()
-        # Delete token cause it was used
-        obj.delete()
-
-        return True
-
+        return self.nonce
 
 
 

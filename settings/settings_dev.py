@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'markets.apps.MarketsConfig',
     'balances.apps.BalancesConfig',
     'trades.apps.TradesConfig',
+    'users.apps.UsersConfig',
     'celery'
 ]
 
@@ -133,6 +134,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Auth model
+AUTH_USER_MODEL = 'users.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

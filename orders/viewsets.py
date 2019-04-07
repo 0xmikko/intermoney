@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from markets.models import Market
 from .models import Order
 from .serializers import OrderSerializer
+from users.serializers import UserSerializer
 
 
 USER_MODEL = get_user_model()
@@ -124,3 +125,13 @@ class OrdersViewSet(viewsets.ModelViewSet):
             return Response("Order accepter", status=status.HTTP_200_OK)
 
         return Response("Bad data", status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['GET'])
+    def get_next_nonce(self, request):
+        user = request.user
+        if user is None:
+            return Response("You should be authred", status=status.HTTP_401_UNAUTHORIZED)
+        user.get_new_nonce()
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
