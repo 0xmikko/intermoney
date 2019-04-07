@@ -5,35 +5,38 @@ Fully decentralized exchanges (DEX) is a hot topic however there are many proble
 1) Matching operations are slow 
 2) Each operations requires gas
 3) Operation speed is limited to blockchain perfrormance
-4) Frontrunning is possible 
+4) Front-running is possible 
 5) Clients positions are visible
 
 Centralized crypto currency exchanges have other set of problems leading to lack of trust from the clients:
 1) Vulnerable to hackers attack leading to loose of the clients assets
-2) Frontrunning and other fraudulent actions are possible 
+2) Front-running and other fraudulent actions are possible 
 
 
 ## Task
-Create the tokenized exchange facility missing all problem mentioned above and find some other advantages of combining decentralized assets storage technology and centralized matching engine
+Create the tokenized exchange facility missing all problem mentioned above and find some other advantages of combining decentralized assets storage technology and centralized matching engine.
 
 ## The structure
-Meantime in a crypto space we see combining all functions of classic market in one place - the cryptocurrency exchange, however such structure leads to most of the problems mentioned above. If we take into account, we are workign on insitutional grade facility working with tokenised assets, we see the following structure:
+Meantime in a crypto space we see combining all functions of classic market in one place - the cryptocurrency exchange, however such structure leads to most of the problems mentioned above. If we take into account, we are building the insitutional grade facility dealing with tokenised assets, we see the following structure:
 
-<b>Tokenization center</b>, the equivalent of clearign house for the stock market, central bank holding the register of accounts of other banks, in other words, this is real-world asstes storage delaing with tokenization and responsible for deposits and withdrawals of participants funds issuing tokens accoring to the value of asstes deposited to this faclity. The main difference is that this facility trust balances written in distrubited ledger records. 
+<b>Tokenization center</b>, the equivalent of clearign house for the stock market, central bank holding the register of accounts of other banks, in other words, this is real-world asstes storage dealing with tokenization and responsible for deposits and withdrawals of participants funds issuing tokens accoring to the value of asstes deposited to this faclity. The main difference is that this facility trust balances written in distrubited ledger records. 
 Technically designed as a smart-contract that has permission to increase and decrease balances of traders. 
 
 
-<b>Goverance center</b>, the equivalent of court in a real works that deals with disputes resolution. This is the part thac can deal with revertign transactions. 
-Technically designed as a multisignature smart-contract that permission to add and remove funds from accounts.  
+<b>Goverance center</b>, the equivalent of court in a real world that deals with disputes resolution. This is the part thac can deal with revertign transactions. 
+Technically designed as a multisignature smart-contract that has permission to manage balances.
 
 
-<b>Traders</b>, the equivalaent of banks on the interbank market or traders, delaing with any kind of financial assets.
+<b>Traders</b>, the equivalent of banks on the interbank market or traders, delaing with any kind of financial assets.
 Techically is a private key that signs orders and blockchain transactions. 
 
-<b>Exchange</b>, the analogue of old fashioned exchange, dealing with the orders of traders and acting as a technical facility for fulfillment the trades within the system. 
-Technically is a set of matching engine,  smart contract with the permission to increase or decrease balances only in case this transaction is confirmed by trader. 
+<b>Exchange</b>, the analogue of old fashioned exchange, dealing with the orders and operates as a technical facility for fulfillment the trades within the system. 
+Technically is a combination of matching engine and smart contract with the permission to increase or decrease balances only in case this transaction is confirmed by trader. 
 
 <i>Please note, that broker, the entity that forwards orders to exchanges and provide clearing houses with the information about clients transactions to balances reconciliation is eliminated from this scheme. </i>
+
+## Idea
+Create technical solution that allows to perform trading of tokenized assets on mutual untrust principle however was governed and transparent for regulatory and couterparties.
 
 ## Entities 
 <b>Assets</b> - tokenised assets, such as currencies, stocks or other financial instruments. Technically - ERC20-standard token with extended functionality. 
@@ -50,9 +53,36 @@ Technically is a set of matching engine,  smart contract with the permission to 
 
 <b>Match</b> - when matching smart contract receives the trade information from the exchange's backend it checks integrity of orders parameters by validating the traders signature , then it checks if match parameters don't go against the interest of the traders and trade is done according to initial orders parameters, then it checks if the trade is not a duplicate by comparing nonce with nonce values in a smart contract and if total trade value doesn't overflow initial order value.  
 
-## Possibilities 
-Those fetures are a subject for more accurate studying:
-<b>Additional privacy</b> - unlike DEX, centralised matching exchange gives great potential for improving the privacy. For example, matching transafers can be sent to addresses according to signed order parameters by matching engine smart contract masking the connection of multiple receipients to previous funds owner. Such balances can be accessed by private keys or masked by security codes those can be used for collecting funds on parent address when necessary.  
+## Technical implementation
+<b>Exchnage backend</b> 
+Python / Django / SQLLite - provides JSON/RPC interface for public and private endpoints. Process received orders from Frontend or can be accessed by algorithms through REST API. 
+
+<b>Smart-contract interaction backend</b>
+NodeJS - provides JSON/RPC interface for interacting with smart-contract. Receives matching and order information from exchange backend signs it with exchanges smart contract owner  private key and sends it to Ethereum blockchain. 
+
+<b>Frontend</b>
+React/Redux, provides trader with simple interface to interact with backend over REST API.
+
+Uses Metamask to sign orders with traders private key.
+
+Provides Level2 market depth informarmation, shows recent trades, last trade price. 
+
+For authorized traders shows balances, orders, allows to send market or limit orders. 
+
+![Intermoney exchange frontend](/images/frontend.jpg?raw=true "Intermoney exchnage Frontend")
+
+
+<b>Tokenized asset smart-contract</b>
+
+
+<b>Exchange smart contract</b>
+
+## Workflow 
+Trader enters order parameters and signes it with its private key over metamask. This is not a blockchain transaction but a SECP256K1 ECDSA signature of Keccak-256 hash of ABI encoded parameters. 
+
+Signed orders is sent to exchange backend. Exchange backend assigns and returnes global order number and puts 
+
+
 
 ## Funds security
 Total loss of funds is the main concern for institutional players that's why this is extrmely important to achieve better security of traders within the system. Since all traders are identified by private keys, key loose or compromentation should not lead to total loose of assets. 
@@ -61,7 +91,14 @@ Total loss of funds is the main concern for institutional players that's why thi
 
 <b>Risk of fraudulent actions.</b> In case the criminal activities lead to fraudulent transaction such addresses chould be blocked by goverance center for future investigation and reverting balances to initial state. Even in this case parties take exchange rate risk while the situation is in resolution phase it should be considered as a better options instead of total loss.  
 
-<b>Risk error</b>. In case of the wrong action, such as specifying misproper receipient address, price or anything alse leading to funds get nowhere and cannot be accessed, the goverance center could take proper actions to eliminate the consequences. 
+<b>Human fault risk</b>. In case of the wrong action, such as specifying misproper receipient address, price or anything alse leading to funds get nowhere and cannot be accessed, the goverance center could take proper actions to eliminate the consequences. 
+
+
+## Advanced features
+Following features are a subject for more accurate studying:
+<b>Additional privacy</b> - unlike DEX, centralised matching exchange gives great potential for improving the privacy. For example, matching transafers can be sent to addresses according to signed order parameters by matching engine smart contract masking the connection of multiple receipients to previous funds owner. Such balances can be accessed by private keys or masked by security codes those can be used for collecting funds on parent address when necessary.  
+
+<b>Transparency for regulators and counterparties</b>. Matching is not a random algorithm and its result cannot be threated as something variable. DLT provides the exchange with opportunity to achieve full transaprency and become provable fair. Each order received by matching engine is assigned with order id, meantime order data signed by trader should be signed with previous hash and reported to blockchain. The exchange confirms this way all the orders are processed by predefined matching rules and all trades and funds transfer can be historicaly simulated. This process guarantees the protection agains front-running that cen be easily identified by regulatory and guarantees traders their orders are executed according to exchange's matching rules.
 
 ## Conclusion 
 We should make maximum efforts to work out to understand fully all the potential profits and discover disadvantages and risks, however even on such a preliminary phase we see great potential for combining technology to achieve maixumum security, privacy and sustainability for traders. 
