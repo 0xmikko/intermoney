@@ -1,13 +1,5 @@
-import jwt
-from datetime import datetime, timedelta
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.http import HttpResponseBadRequest
-from django.utils.html import strip_tags
 
 
 class UserManager(BaseUserManager):
