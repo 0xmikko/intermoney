@@ -11,6 +11,10 @@ from .serializers import MarketSerializer
 
 
 class MarketsViewSet(viewsets.ModelViewSet):
+    """
+    use /api/markets/create_market/ - to create bots
+    use /api/markets/ - to list all markets
+    """
     queryset = Market.objects.all()
     serializer_class = MarketSerializer
 

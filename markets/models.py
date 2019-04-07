@@ -31,7 +31,6 @@ class Market(models.Model):
     def change_24(self):
         return 0
 
-
     @classmethod
     def get_market_by_tickers(cls, name):
         """
