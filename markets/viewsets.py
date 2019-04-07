@@ -91,7 +91,7 @@ class MarketsViewSet(viewsets.ModelViewSet):
             return Response("Bots were created", status=status.HTTP_200_OK)
 
     @action(detail=True)
-    def process(self, requestm, pk):
+    def process(self, request, pk):
         market_obj = get_object_or_404(Market, pk=pk)
         market_obj.process_queue()
         return Response("Matching cycle was done", status=status.HTTP_200_OK)

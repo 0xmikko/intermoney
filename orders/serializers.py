@@ -17,9 +17,10 @@ class OrderSerializer(serializers.ModelSerializer):
             'size',
             'filled',
             'status',
-            'hash_signature'
+            'hash_signature',
+            'created_at'
         )
-        read_only_fields = ('order_type', 'market_display', 'status', 'filled', 'side')
+        read_only_fields = ('order_type', 'market_display', 'status', 'filled', 'side',  'created_at')
 
     def get_market_display(self, obj):
         return str(obj.market)
