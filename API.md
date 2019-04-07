@@ -146,3 +146,29 @@ result - markest array of JSON
     precision : uint (ex : 4)
 }
 ```
+
+
+#Smart contract interaction API
+
+## POST /execute_exchange
+JSON
+```
+sellerOrder : {
+    signature : string
+    address : string
+    value : string
+    rate : string
+    nonce : string
+}
+
+buyerOrder : {
+    signature : string
+    address : string
+    value : string
+    rate : string
+    nonce : string
+}
+
+tradePrice : string
+tradeSize : string
+```
