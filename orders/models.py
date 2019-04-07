@@ -52,12 +52,12 @@ class Order(models.Model):
     market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True, related_name='order_set')
     order_type = models.IntegerField(default=ORDER_LIMIT)
 
-    side = models.IntegerField(default=1)
+    side = models.IntegerField(default=1, choices=SIDES_CHOICES)
 
-    price = models.IntegerField(default=0)
-    size = models.IntegerField(default=0)
+    price = models.DecimalField(default=0, max_digits=40, decimal_places=0)
+    size = models.DecimalField(default=0, max_digits=40, decimal_places=0)
 
-    filled = models.IntegerField(default=0)
+    filled = models.DecimalField(default=0, max_digits=40, decimal_places=0)
     status = models.IntegerField(default=0)
 
     hash_signature = models.CharField(max_length=1024, default='')

@@ -72,7 +72,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
             obj.save()
             return Response("Order accepter", status=status.HTTP_200_OK)
 
-        return Response("Bad data", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Bad data" + str(serializer.errors), status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'])
     def sell_market(self, request):
@@ -106,7 +106,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
             obj.save()
             return Response("Order accepter", status=status.HTTP_200_OK)
 
-        return Response("Bad data", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Bad data" + str(serializer.errors), status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'])
     def sell_limit(self, request):
