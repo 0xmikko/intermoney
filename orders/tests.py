@@ -9,6 +9,7 @@ from trades.models import Trade
 
 USER_MODEL = get_user_model()
 
+
 class Matching():
     @staticmethod
     def get_bid_ask( market : Market):
@@ -23,9 +24,8 @@ class Matching():
 
         return (bid_price, ask_price)
 
-
     @staticmethod
-    def take( order: Order):
+    def take(order: Order):
         depth = []
         if order.side == Order.SIDES_SELL:
             depth = order.market.order_set.filter(side=Order.SIDES_BUY, status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLUY_FILLED]).exclude(price=0).order_by("-price")
@@ -49,13 +49,9 @@ class Matching():
                 order_buy = order
                 order_sell = o
 
+            # Creating trade object
+            Trade.objects.create(order_buy=order_buy, order_sell=order_sell, price=o.price,side=order.side)
 
-            Trade.objects.create(
-                order_buy = order_buy,
-                order_sell = order_sell,
-                price = o.price,
-                side = order.side
-            )
             if order.status == Order.STATUS_FILLED:
                 break
 
