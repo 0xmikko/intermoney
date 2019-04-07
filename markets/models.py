@@ -47,6 +47,7 @@ class Market(models.Model):
         return objs[0]
 
     def process_queue(self):
+        from orders.models import Order
         queue = self.order_set.filter(status=Order.STATUS_WAITING_NEW).order_by("created_at")
         for order in queue:
             order.process()

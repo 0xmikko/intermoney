@@ -84,16 +84,19 @@ class Order(models.Model):
             self.save()
         if self.price != 0:
             self.take()
-            
-            
+
     def take(self):
         from trades.models import Trade
         depth = []
         if self.side == self.SIDES_SELL:
-            depth = self.market.self_set.filter(side=self.SIDES_BUY, status__in=[self.STATUS_NEW, self.STATUS_UPDATED, self.STATUS_PARTIALLY_FILLED]).exclude(price=0).self_by("-price")
+            depth = self.market.order_set.filter(side=self.SIDES_BUY,
+                                                 status__in=[self.STATUS_NEW, self.STATUS_UPDATED, self.STATUS_PARTIALLY_FILLED])\
+                        .exclude(price=0).order_by("-price")
 
         if self.side == self.SIDES_BUY:
-            depth = self.market.self_set.filter(side=self.SIDES_SELL, status__in=[self.STATUS_NEW, self.STATUS_UPDATED, self.STATUS_PARTIALLY_FILLED]).exclude(price=0).self_by("price")
+            depth = self.market.order_set.filter(side=self.SIDES_SELL,
+                                                 status__in=[self.STATUS_NEW, self.STATUS_UPDATED, self.STATUS_PARTIALLY_FILLED])\
+                                         .exclude(price=0).order_by("price")
 
         for o in depth:
             if (self.side == self.SIDES_SELL and self.price != 0 and self.price > o.price) or (self.side == self.SIDES_BUY and self.price != 0 and self.price < o.price):
@@ -116,7 +119,7 @@ class Order(models.Model):
                 self_buy = self
                 self_sell = o
 
-            Trade.objects.create(self_buy=self_buy, self_sell = self_sell, price = o.price, side = self.side,
+            Trade.objects.create(order_buy=self_buy, order_sell=self_sell, price=o.price, side=self.side,
                                  size=fill_size)
 
             if self.status == self.STATUS_FILLED:
