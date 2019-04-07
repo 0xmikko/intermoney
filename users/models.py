@@ -17,7 +17,7 @@ class UserManager(BaseUserManager):
         if username is None:
             raise TypeError('Users must have a username.')
 
-        if User.objects.filter(email=username).count() >0:
+        if User.objects.filter(username=username).count() > 0:
             print("FUC")
             raise ValueError('User with this username is already exists')
 

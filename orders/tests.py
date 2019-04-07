@@ -44,8 +44,9 @@ class TestOrder(TestCase):
                                             base_currency=self.ticker1,
                                             quote_currency=self.ticker2)
 
-        self.Alice = USER_MODEL.objects.create_user(username="Alice", email="alice@yy.ru", password="hhhh")
-        self.Bob = USER_MODEL.objects.create_user(username="Bob", email="bob@yy.ru", password="hhhh")
+        self.Alice = USER_MODEL.objects.create_user(username="Alice",
+                                                    password="hhhh")
+        self.Bob = USER_MODEL.objects.create_user(username="Bob", password="hhhh")
 
         # Creating Alice orders
         for i in range(20):
