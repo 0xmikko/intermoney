@@ -40,8 +40,9 @@ class MarketsViewSet(viewsets.ModelViewSet):
                                             base_currency=ticker2,
                                             quote_currency=ticker1)
 
-        names = ["Alice", "Bob", "Claudia", "Dodge", "Sapsan", "Eugene", "Eugene in Sapsan",
-                 "Eugene in Sapsan writing DEX on Go"]
+        names = ["0x98357e4f121635f0bB400c7ba21C741d9C566fFF",
+                 "00xDA6fF730ad78650Dca327330CffC314044a4AF6b",
+                 ]
 
         bots = []
 
@@ -71,7 +72,7 @@ class MarketsViewSet(viewsets.ModelViewSet):
                                              size=100000 + i * 10000,
                                              filled=0,
                                              status=Order.STATUS_WAITING_NEW,
-                                             hash_signature="SIGA",
+                                             hash_signature="0x3a30bd0e3f0cf68cbaa0094d298c372b5073f1abd782f94b08a3aad43a7476e67e80e18e02a800fea9c03f626af28c49ba864637bcdea84824e96b99bc2b63b51c",
                                              market=market)
 
                 if num % strategy_count == 1:
@@ -82,7 +83,7 @@ class MarketsViewSet(viewsets.ModelViewSet):
                                              size=100000 + i * 10000,
                                              filled=0,
                                              status=Order.STATUS_WAITING_NEW,
-                                             hash_signature="SIGA",
+                                             hash_signature="0x3a30bd0e3f0cf68cbaa0094d298c372b5073f1abd782f94b08a3aad43a7476e67e80e18e02a800fea9c03f626af28c49ba864637bcdea84824e96b99bc2b63b51c",
                                              market=market)
 
                 if num % strategy_count == 2:
@@ -93,7 +94,7 @@ class MarketsViewSet(viewsets.ModelViewSet):
                                              size=100000 + i * 10000,
                                              filled=0,
                                              status=Order.STATUS_WAITING_NEW,
-                                             hash_signature="SIGA",
+                                             hash_signature="0x3a30bd0e3f0cf68cbaa0094d298c372b5073f1abd782f94b08a3aad43a7476e67e80e18e02a800fea9c03f626af28c49ba864637bcdea84824e96b99bc2b63b51c",
                                              market=market)
 
                 num += 1
