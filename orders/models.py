@@ -50,7 +50,7 @@ class Order(models.Model):
 
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True )
     market = models.ForeignKey(Market, blank=True, on_delete=models.CASCADE, null=True, related_name='order_set')
-    order_type = models.IntegerField(default=ORDER_LIMIT)
+    order_type = models.IntegerField(default=ORDER_LIMIT, choices=ORDERS_TYPES)
 
     side = models.IntegerField(default=1, choices=SIDES_CHOICES)
 
@@ -58,12 +58,15 @@ class Order(models.Model):
     size = models.DecimalField(default=0, max_digits=40, decimal_places=0)
 
     filled = models.DecimalField(default=0, max_digits=40, decimal_places=0)
-    status = models.IntegerField(default=0)
+    status = models.IntegerField(default=0, choices=STATUSES)
 
     hash_signature = models.CharField(max_length=1024, default='')
 
     created_at = models.DateTimeField(auto_now_add=True, editable=False, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, editable=True, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.sender) + " " + str(self.get_order_type_display()) + " " + str(self.get_status_display()) + " " + str(self.price)
 
     def fill(self, filled : int):
         self.filled += filled

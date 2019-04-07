@@ -31,3 +31,13 @@ class MarketSerializer(serializers.ModelSerializer):
 
     def get_quote_currency_display(self, object):
         return str(object.quote_currency)
+
+
+class Level2Serializer(serializers.Serializer):
+    price = serializers.DecimalField(max_digits=40, decimal_places=0)
+    size = serializers.DecimalField(max_digits=40, decimal_places=0)
+
+
+class OrderBookSerializer(serializers.Serializer):
+    ask = Level2Serializer(read_only=True, many=True)
+    bid = Level2Serializer(read_only=True, many=True)

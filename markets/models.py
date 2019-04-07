@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Sum
+
 from tickers.models import Ticker
 
 
@@ -82,4 +84,17 @@ class Market(models.Model):
     def __str__(self):
         return self.name
 
+    def get_level2(self, side):
+        from orders.serializers import Order
+        order_direction = ""
+        if side == Order.SIDES_BUY:
+            order_direction = "-"
+
+        level2 = self.order_set\
+            .filter(side=side, status__in=[Order.STATUS_NEW, Order.STATUS_UPDATED, Order.STATUS_PARTIALLY_FILLED])\
+            .order_by(order_direction+"price")\
+            .values("price")\
+            .annotate(size=Sum('size')-Sum('filled'))
+
+        return level2
 
