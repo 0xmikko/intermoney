@@ -10,7 +10,8 @@ class OrdersViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
     @action(detail=False)
-    def orderbook(self):
+    def orderbook(self, request):
+        market_name = request.GET.get("market")
         pass
 
     @action(detail=False)
