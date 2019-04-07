@@ -74,4 +74,7 @@ class Market(models.Model):
 
         return (bid_price, ask_price)
 
+    def __str__(self):
+        return self.name
+
 
